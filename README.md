@@ -1,4 +1,4 @@
-# Mirco
+# Tiler
 
-A Mir based Wayland compositor forked from [egmde](https://github.com/AlanGriffiths/egmde)
+A Mir based Wayland compositor 
 

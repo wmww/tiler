@@ -35,7 +35,7 @@
 
 #include <linux/input.h>
 
-using namespace mirco;
+using namespace tiler;
 using namespace miral::toolkit;
 
 auto main(int argc, char const* argv[]) -> int
@@ -112,6 +112,6 @@ auto main(int argc, char const* argv[]) -> int
             miral::Keymap{},
             miral::AppendEventFilter{keyboard_shortcuts},
             miral::AppendEventFilter{touch_shortcuts},
-            miral::set_window_management_policy<mirco::WindowManagerPolicy>()
+            miral::set_window_management_policy<tiler::WindowManagerPolicy>()
         });
 }

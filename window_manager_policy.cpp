@@ -24,10 +24,10 @@
 
 using namespace miral;
 
-mirco::WindowManagerPolicy::WindowManagerPolicy(
+tiler::WindowManagerPolicy::WindowManagerPolicy(
     WindowManagerTools const& tools) :
     MinimalWindowManager(tools)
 {
 }
 
-mirco::WindowManagerPolicy::~WindowManagerPolicy() = default;
+tiler::WindowManagerPolicy::~WindowManagerPolicy() = default;

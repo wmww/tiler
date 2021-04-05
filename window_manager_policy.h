@@ -23,7 +23,7 @@
 
 using namespace mir::geometry;
 
-namespace mirco
+namespace tiler
 {
 
 class WindowManagerPolicy : public miral::MinimalWindowManager

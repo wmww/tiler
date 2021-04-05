@@ -1,5 +1,5 @@
 project(
-    'Mirco',
+    'Tiler',
     ['cpp'],
     version: '0.1.0',
     license: 'LGPLv3',
@@ -26,7 +26,7 @@ srcs = [
 ]
 
 example = executable(
-    'mirco',
+    'tiler',
     srcs,
     dependencies: [miral_dep],
     install: true,
