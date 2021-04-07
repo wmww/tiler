@@ -1,9 +1,9 @@
 /*
- * Copyright © 2019 Octopull Ltd.
+ * Copyright (C) 2021 William Wold
  *
  * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 3,
- * as published by the Free Software Foundation.
+ * under the terms of the GNU General Public License version 2 or 3 as
+ * published by the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -12,106 +12,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authored by: Alan Griffiths <alan@octopull.co.uk>
- *              William Wold <william.wold@canonical.com>
  */
 
-#include "window_manager_policy.h"
-
-#include <miral/append_event_filter.h>
-#include <miral/command_line_option.h>
-#include <miral/display_configuration_option.h>
-#include <miral/internal_client.h>
-#include <miral/keymap.h>
-#include <miral/runner.h>
-#include <miral/set_window_management_policy.h>
-#include <miral/version.h>
-#include <miral/wayland_extensions.h>
-#include <miral/x11_support.h>
-#include <miral/display_configuration.h>
-#include <miral/external_client.h>
-#include <miral/toolkit_event.h>
-
-#include <linux/input.h>
+#include "tiler_shell.h"
 
 using namespace tiler;
-using namespace miral::toolkit;
 
 auto main(int argc, char const* argv[]) -> int
 {
-    miral::MirRunner runner{argc, argv};
-
-    auto const keyboard_shortcuts = [&](MirEvent const* event)
-        {
-            if (mir_event_get_type(event) != mir_event_type_input)
-                return false;
-
-            MirInputEvent const* input_event = mir_event_get_input_event(event);
-            if (mir_input_event_get_type(input_event) != mir_input_event_type_key)
-                return false;
-
-            MirKeyboardEvent const* kev = mir_input_event_get_keyboard_event(input_event);
-            if (mir_keyboard_event_action(kev) != mir_keyboard_action_down)
-                return false;
-
-            MirInputEventModifiers mods = mir_keyboard_event_modifiers(kev);
-            if (!(mods & mir_input_event_modifier_alt) || !(mods & mir_input_event_modifier_ctrl))
-                return false;
-
-            switch (mir_keyboard_event_scan_code(kev))
-            {
-            case KEY_BACKSPACE:
-                runner.stop();
-                return true;
-
-            default:
-                return false;
-            }
-        };
-
-    auto touch_shortcuts = [&, gesture = false](MirEvent const* event) mutable
-        {
-            if (mir_event_get_type(event) != mir_event_type_input)
-                return false;
-
-            auto const* input_event = mir_event_get_input_event(event);
-            if (mir_input_event_get_type(input_event) != mir_input_event_type_touch)
-                return false;
-
-            auto const* tev = mir_input_event_get_touch_event(input_event);
-
-            if (gesture)
-            {
-                if (mir_touch_event_action(tev, 0) == mir_touch_action_up)
-                    gesture = false;
-                return true;
-            }
-
-            if (mir_touch_event_point_count(tev) != 1)
-                return false;
-
-            if (mir_touch_event_action(tev, 0) != mir_touch_action_down)
-                return false;
-
-            if (mir_touch_event_axis_value(tev, 0, mir_touch_axis_x) >= 5)
-                return false;
-
-            gesture = true;
-            return true;
-        };
-
-    return runner.run_with(
-        {
-            miral::X11Support{},
-            miral::WaylandExtensions{}
-                .enable(miral::WaylandExtensions::zwlr_layer_shell_v1)
-                .enable(miral::WaylandExtensions::zwlr_foreign_toplevel_manager_v1)
-                .enable(miral::WaylandExtensions::zxdg_output_manager_v1),
-            miral::DisplayConfiguration{runner},
-            miral::Keymap{},
-            miral::AppendEventFilter{keyboard_shortcuts},
-            miral::AppendEventFilter{touch_shortcuts},
-            miral::set_window_management_policy<tiler::WindowManagerPolicy>()
-        });
+    TilerShell shell{argc, argv};
+    return shell.run();
 }

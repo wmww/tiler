@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Canonical Ltd.
+ * Copyright (C) 2021 William Wold
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 or 3 as
@@ -12,22 +12,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authored by: William Wold <william.wold@canonical.com>
  */
 
-#include "window_manager_policy.h"
+#include "window_manager.h"
 
 #include <miral/application_info.h>
 #include <miral/window_info.h>
 #include <miral/window_manager_tools.h>
 
+using namespace tiler;
 using namespace miral;
 
-tiler::WindowManagerPolicy::WindowManagerPolicy(
-    WindowManagerTools const& tools) :
-    MinimalWindowManager(tools)
+WindowManager::WindowManager(WindowManagerTools const& tools, TilerShell* const shell)
+    : MinimalWindowManager(tools),
+      shell{shell}
 {
 }
 
-tiler::WindowManagerPolicy::~WindowManagerPolicy() = default;
+WindowManager::~WindowManager()
+{
+}
