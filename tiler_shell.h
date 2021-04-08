@@ -23,6 +23,7 @@
 namespace miral
 {
 class MirRunner;
+class ExternalClientLauncher;
 }
 
 namespace tiler
@@ -39,16 +40,14 @@ public:
     /// Returns the return code from the runner
     auto run() -> int;
 
-    /// Requests the runner be stopped
-    void request_stop();
+    std::unique_ptr<miral::MirRunner> const runner;
+    std::unique_ptr<miral::ExternalClientLauncher> const launcher;
 
 private:
     TilerShell(TilerShell const&) = delete;
     TilerShell& operator=(TilerShell const&) = delete;
 
-    std::unique_ptr<miral::MirRunner> const runner;
     std::unique_ptr<EventFilter> const event_filter;
-    std::optional<WindowManager*> wm_policy;
 };
 
 }

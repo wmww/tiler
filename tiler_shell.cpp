@@ -24,6 +24,7 @@
 #include <miral/display_configuration.h>
 #include <miral/keymap.h>
 #include <miral/append_event_filter.h>
+#include <miral/external_client.h>
 #include <miral/set_window_management_policy.h>
 
 using namespace tiler;
@@ -31,6 +32,7 @@ using namespace miral;
 
 TilerShell::TilerShell(int argc, char const* argv[])
     : runner{std::make_unique<MirRunner>(argc, argv)},
+      launcher{std::make_unique<ExternalClientLauncher>()},
       event_filter{std::make_unique<EventFilter>(this)}
 {
 }
@@ -54,11 +56,7 @@ auto TilerShell::run() -> int
                 {
                     return event_filter->filter_event(event);
                 }},
+            *launcher,
             miral::set_window_management_policy<WindowManager>(self),
         });
-}
-
-void TilerShell::request_stop()
-{
-    runner->stop();
 }

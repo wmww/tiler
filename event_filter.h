@@ -40,7 +40,7 @@ private:
 
     auto filter_input_event(MirInputEvent const* event) -> bool;
     auto filter_touch_event(MirTouchEvent const* event) -> bool;
-    auto filter_keyboard_event(MirKeyboardEvent const* event) -> bool;
+    auto filter_key_down_event(MirKeyboardEvent const* event) -> bool;
 };
 
 }

@@ -16,6 +16,8 @@
 
 #include "event_filter.h"
 #include "tiler_shell.h"
+#include <miral/external_client.h>
+#include <miral/runner.h>
 #include <linux/input.h>
 
 using namespace tiler;
@@ -43,7 +45,13 @@ auto EventFilter::filter_input_event(MirInputEvent const* event) -> bool
     switch (mir_input_event_get_type(event))
     {
     case mir_input_event_type_key:
-        return filter_keyboard_event(mir_input_event_get_keyboard_event(event));
+    {
+        auto const key_ev = mir_input_event_get_keyboard_event(event);
+        if (mir_keyboard_event_action(key_ev) == mir_keyboard_action_down)
+            return filter_key_down_event(key_ev);
+        else
+            return false;
+    }
 
     case mir_input_event_type_touch:
         return filter_touch_event(mir_input_event_get_touch_event(event));
@@ -58,16 +66,53 @@ auto EventFilter::filter_touch_event(MirTouchEvent const* event) -> bool
     return false;
 }
 
-auto EventFilter::filter_keyboard_event(MirKeyboardEvent const* event) -> bool
+auto EventFilter::filter_key_down_event(MirKeyboardEvent const* event) -> bool
 {
     MirInputEventModifiers const mods = mir_keyboard_event_modifiers(event);
 
-    if ((mods & mir_input_event_modifier_alt) && (mods & mir_input_event_modifier_ctrl))
+    if ((mods & mir_input_event_modifier_meta) &&
+        (mods & mir_input_event_modifier_shift) &&
+        (mods & mir_input_event_modifier_ctrl))
     {
         switch (mir_keyboard_event_scan_code(event))
         {
         case KEY_BACKSPACE:
-            shell->request_stop();
+            shell->runner->stop();
+            return true;
+        }
+    }
+    else if (mods & mir_input_event_modifier_meta)
+    {
+        switch (mir_keyboard_event_scan_code(event))
+        {
+        case KEY_SPACE:
+            // Synapse, an app launcher
+            shell->launcher->launch({"synapse"});
+            return true;
+
+        case KEY_ENTER:
+            // A terminal
+            shell->launcher->launch({"lxterminal"});
+            return true;
+
+        case KEY_F:
+            // File manager
+            shell->launcher->launch({"nemo"});
+            return true;
+
+        case KEY_V:
+            // Volume control
+            shell->launcher->launch({"pavucontrol"});
+            return true;
+
+        case KEY_EQUAL:
+            // Calculator
+            shell->launcher->launch({"gnome-calculator"});
+            return true;
+
+        case KEY_Q:
+            // Exit the currently active app
+            //shell->wm->close_current_app();
             return true;
         }
     }
