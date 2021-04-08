@@ -42,6 +42,7 @@ public:
 
     std::unique_ptr<miral::MirRunner> const runner;
     std::unique_ptr<miral::ExternalClientLauncher> const launcher;
+    WindowManager* wm;
 
 private:
     TilerShell(TilerShell const&) = delete;

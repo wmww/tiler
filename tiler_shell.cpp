@@ -25,7 +25,6 @@
 #include <miral/keymap.h>
 #include <miral/append_event_filter.h>
 #include <miral/external_client.h>
-#include <miral/set_window_management_policy.h>
 
 using namespace tiler;
 using namespace miral;
@@ -33,6 +32,7 @@ using namespace miral;
 TilerShell::TilerShell(int argc, char const* argv[])
     : runner{std::make_unique<MirRunner>(argc, argv)},
       launcher{std::make_unique<ExternalClientLauncher>()},
+      wm{&NullWindowManager::instance},
       event_filter{std::make_unique<EventFilter>(this)}
 {
 }
@@ -43,7 +43,6 @@ TilerShell::~TilerShell()
 
 auto TilerShell::run() -> int
 {
-    TilerShell* const self = this; // If we use `this` directly set_window_management_policy() breaks
     return runner->run_with(
         {
             miral::X11Support{},
@@ -57,6 +56,6 @@ auto TilerShell::run() -> int
                     return event_filter->filter_event(event);
                 }},
             *launcher,
-            miral::set_window_management_policy<WindowManager>(self),
+            WindowManager::make_setter_upper(this),
         });
 }

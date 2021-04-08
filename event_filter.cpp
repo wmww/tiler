@@ -16,6 +16,7 @@
 
 #include "event_filter.h"
 #include "tiler_shell.h"
+#include "window_manager.h"
 #include <miral/external_client.h>
 #include <miral/runner.h>
 #include <linux/input.h>
@@ -112,7 +113,7 @@ auto EventFilter::filter_key_down_event(MirKeyboardEvent const* event) -> bool
 
         case KEY_Q:
             // Exit the currently active app
-            //shell->wm->close_current_app();
+            shell->wm->close_active_window();
             return true;
         }
     }

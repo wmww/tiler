@@ -17,22 +17,44 @@
 #ifndef WINDOW_MANAGER_H
 #define WINDOW_MANAGER_H
 
-#include <miral/minimal_window_manager.h>
+#include <functional>
 
-using namespace mir::geometry;
+namespace mir
+{
+class Server;
+}
+
+namespace miral
+{
+class WindowManagerTools;
+}
 
 namespace tiler
 {
 class TilerShell;
 
-class WindowManager : public miral::MinimalWindowManager
+class WindowManager
 {
 public:
-    WindowManager(miral::WindowManagerTools const& tools, TilerShell* const shell);
-    ~WindowManager();
+    WindowManager() = default;
+    virtual ~WindowManager() = default;
+
+    virtual void close_active_window() = 0;
+
+    static auto make_setter_upper(TilerShell* const shell) -> std::function<void(mir::Server&)>;
 
 private:
-    TilerShell* const shell;
+    WindowManager(WindowManager const&) = delete;
+    WindowManager& operator=(WindowManager const&) = delete;
+};
+
+/// Used when no window manager is available, such as during startup
+class NullWindowManager: public WindowManager
+{
+public:
+    void close_active_window() override {};
+
+    static NullWindowManager instance;
 };
 
 }
