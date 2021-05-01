@@ -31,9 +31,8 @@ namespace tiler
 class EventFilter;
 class WindowManager;
 
-/// If $WAYLAND_DISPLAY points to a display that's already in use by another compositor, unset it so Mir will choose a
-/// free display instead of failing to start (IMO Mir should do this automatically, but so far I've lost that argument)
-void unset_wayland_display_if_its_taken();
+/// Various environment variable hacks needed to make Mir do the right things
+void setup_env();
 
 class TilerShell
 {

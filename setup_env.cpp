@@ -21,7 +21,9 @@
 
 // Logic in this file mirrors that in libwayland. See https://github.com/wayland-project/wayland/blob/34306efeb261f8466ad427a61cdae3272b8bae4d/src/wayland-server.c#L1494
 
-void tiler::unset_wayland_display_if_its_taken()
+/// If $WAYLAND_DISPLAY points to a display that's already in use by another compositor, unset it so Mir will choose a
+/// free display instead of failing to start (IMO Mir should do this automatically, but so far I've lost that argument)
+static void unset_wayland_display_if_its_taken()
 {
     auto const wayland_display_c_str = getenv("WAYLAND_DISPLAY");
     if (wayland_display_c_str)
@@ -48,4 +50,12 @@ void tiler::unset_wayland_display_if_its_taken()
             unsetenv("WAYLAND_DISPLAY");
         }
     }
+}
+
+void tiler::setup_env()
+{
+    // enable XWayland support
+    setenv("MIR_SERVER_ENABLE_X11", "1", 1);
+
+    unset_wayland_display_if_its_taken();
 }

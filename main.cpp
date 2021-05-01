@@ -20,7 +20,7 @@ using namespace tiler;
 
 auto main(int argc, char const* argv[]) -> int
 {
-    unset_wayland_display_if_its_taken();
+    setup_env();
     TilerShell shell{argc, argv};
     return shell.run();
 }

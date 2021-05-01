@@ -26,7 +26,7 @@ srcs = [
     'event_filter.cpp',
     'window_manager.cpp',
     'window_manager.h',
-    'wayland_display_env.cpp',
+    'setup_env.cpp',
 ]
 
 example = executable(
