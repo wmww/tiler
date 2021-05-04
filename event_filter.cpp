@@ -82,6 +82,16 @@ auto EventFilter::filter_key_down_event(MirKeyboardEvent const* event) -> bool
             return true;
         }
     }
+    else if ((mods & mir_input_event_modifier_ctrl) &&
+             (mods & mir_input_event_modifier_alt))
+    {
+        switch (mir_keyboard_event_scan_code(event))
+        {
+        case KEY_T:
+            launch_terminal();
+            return true;
+        }
+    }
     else if (mods & mir_input_event_modifier_meta)
     {
         switch (mir_keyboard_event_scan_code(event))
@@ -92,8 +102,7 @@ auto EventFilter::filter_key_down_event(MirKeyboardEvent const* event) -> bool
             return true;
 
         case KEY_ENTER:
-            // A terminal
-            shell->launcher->launch({"lxterminal"});
+            launch_terminal();
             return true;
 
         case KEY_F:
@@ -119,4 +128,9 @@ auto EventFilter::filter_key_down_event(MirKeyboardEvent const* event) -> bool
     }
 
     return false;
+}
+
+void EventFilter::launch_terminal()
+{
+    shell->launcher->launch({"lxterminal"});
 }
