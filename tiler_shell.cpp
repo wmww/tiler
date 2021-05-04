@@ -30,9 +30,9 @@ using namespace tiler;
 using namespace miral;
 
 TilerShell::TilerShell(int argc, char const* argv[])
-    : runner{std::make_unique<MirRunner>(argc, argv)},
-      launcher{std::make_unique<ExternalClientLauncher>()},
+    : launcher{std::make_unique<ExternalClientLauncher>()},
       wm{&NullWindowManager::instance},
+      runner{std::make_unique<MirRunner>(argc, argv)},
       event_filter{std::make_unique<EventFilter>(this)}
 {
 }
@@ -58,4 +58,9 @@ auto TilerShell::run() -> int
             *launcher,
             WindowManager::make_setter_upper(this),
         });
+}
+
+void TilerShell::request_stop()
+{
+    runner->stop();
 }

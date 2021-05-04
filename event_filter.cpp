@@ -78,7 +78,7 @@ auto EventFilter::filter_key_down_event(MirKeyboardEvent const* event) -> bool
         switch (mir_keyboard_event_scan_code(event))
         {
         case KEY_BACKSPACE:
-            shell->runner->stop();
+            shell->request_stop();
             return true;
         }
     }

@@ -43,7 +43,9 @@ public:
     /// Returns the return code from the runner
     auto run() -> int;
 
-    std::unique_ptr<miral::MirRunner> const runner;
+    /// Asks Mir to stop if currently running
+    void request_stop();
+
     std::unique_ptr<miral::ExternalClientLauncher> const launcher;
     WindowManager* wm;
 
@@ -51,6 +53,7 @@ private:
     TilerShell(TilerShell const&) = delete;
     TilerShell& operator=(TilerShell const&) = delete;
 
+    std::unique_ptr<miral::MirRunner> const runner;
     std::unique_ptr<EventFilter> const event_filter;
 };
 
