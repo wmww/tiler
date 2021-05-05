@@ -16,7 +16,7 @@
 
 #include "event_filter.h"
 #include "tiler_shell.h"
-#include "window_manager.h"
+#include "window_manager/window_manager.h"
 #include <miral/external_client.h>
 #include <miral/runner.h>
 #include <linux/input.h>
@@ -24,7 +24,7 @@
 using namespace tiler;
 using namespace miral::toolkit;
 
-EventFilter::EventFilter(TilerShell* const shell)
+EventFilter::EventFilter(TilerShell* shell)
     : shell{shell}
 {
 }

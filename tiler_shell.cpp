@@ -16,7 +16,7 @@
 
 #include "tiler_shell.h"
 #include "event_filter.h"
-#include "window_manager.h"
+#include "window_manager/shell_window_manager.h"
 
 #include <miral/runner.h>
 #include <miral/x11_support.h>
@@ -31,7 +31,7 @@ using namespace miral;
 
 TilerShell::TilerShell(int argc, char const* argv[])
     : launcher{std::make_unique<ExternalClientLauncher>()},
-      wm{&NullWindowManager::instance},
+      wm{ShellWindowManager::make_impl()},
       runner{std::make_unique<MirRunner>(argc, argv)},
       event_filter{std::make_unique<EventFilter>(this)}
 {
@@ -56,7 +56,7 @@ auto TilerShell::run() -> int
                     return event_filter->filter_event(event);
                 }},
             *launcher,
-            WindowManager::make_setter_upper(this),
+            dynamic_cast<ShellWindowManager*>(wm.get())->runner_option(this),
         });
 }
 

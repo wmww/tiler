@@ -17,17 +17,7 @@
 #ifndef WINDOW_MANAGER_H
 #define WINDOW_MANAGER_H
 
-#include <functional>
-
-namespace mir
-{
-class Server;
-}
-
-namespace miral
-{
-class WindowManagerTools;
-}
+#include <memory>
 
 namespace tiler
 {
@@ -41,20 +31,9 @@ public:
 
     virtual void close_active_window() = 0;
 
-    static auto make_setter_upper(TilerShell* const shell) -> std::function<void(mir::Server&)>;
-
 private:
     WindowManager(WindowManager const&) = delete;
     WindowManager& operator=(WindowManager const&) = delete;
-};
-
-/// Used when no window manager is available, such as during startup
-class NullWindowManager: public WindowManager
-{
-public:
-    void close_active_window() override {};
-
-    static NullWindowManager instance;
 };
 
 }

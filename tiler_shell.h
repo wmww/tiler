@@ -47,7 +47,7 @@ public:
     void request_stop();
 
     std::unique_ptr<miral::ExternalClientLauncher> const launcher;
-    WindowManager* wm;
+    std::unique_ptr<WindowManager> const wm;
 
 private:
     TilerShell(TilerShell const&) = delete;

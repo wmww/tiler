@@ -14,37 +14,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef EVENT_FILTER_H
-#define EVENT_FILTER_H
+#ifndef SHELL_WINDOW_MANAGER_H
+#define SHELL_WINDOW_MANAGER_H
 
-#include <miral/toolkit_event.h>
+#include "window_manager.h"
+
+#include <functional>
+
+namespace mir
+{
+class Server;
+}
 
 namespace tiler
 {
 class TilerShell;
 
-class EventFilter
+class ShellWindowManager : public WindowManager
 {
 public:
-    EventFilter(TilerShell* shell);
-    ~EventFilter() = default;
+    static auto make_impl() -> std::unique_ptr<ShellWindowManager>;
 
-    auto filter_event(MirEvent const* event) -> bool;
-
-private:
-    EventFilter(EventFilter const&) = delete;
-    EventFilter& operator=(EventFilter const&) = delete;
-
-    /// Always outlives this object
-    TilerShell* const shell;
-
-    auto filter_input_event(MirInputEvent const* event) -> bool;
-    auto filter_touch_event(MirTouchEvent const* event) -> bool;
-    auto filter_key_down_event(MirKeyboardEvent const* event) -> bool;
-
-    void launch_terminal();
+    virtual auto runner_option(TilerShell* shell) -> std::function<void(mir::Server&)> = 0;
 };
 
 }
 
-#endif // EVENT_FILTER_H
+#endif // SHELL_WINDOW_MANAGER_H

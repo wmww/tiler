@@ -18,16 +18,16 @@ add_project_arguments(
 
 miral_dep = dependency('miral')
 
-srcs = [
+subdir('window_manager')
+
+srcs = files(
     'main.cpp',
     'tiler_shell.h',
     'tiler_shell.cpp',
     'event_filter.h',
     'event_filter.cpp',
-    'window_manager.cpp',
-    'window_manager.h',
     'setup_env.cpp',
-]
+) + window_manager_srcs
 
 example = executable(
     'tiler',
