@@ -30,6 +30,8 @@ public:
     virtual ~WindowManager() = default;
 
     virtual void close_active_window() = 0;
+    virtual void focus_next_window() = 0;
+    virtual void focus_prev_window() = 0;
 
 private:
     WindowManager(WindowManager const&) = delete;

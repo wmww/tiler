@@ -126,6 +126,15 @@ auto EventFilter::filter_key_down_event(MirKeyboardEvent const* event) -> bool
             return true;
         }
     }
+    else if (mods & mir_input_event_modifier_alt)
+    {
+        switch (mir_keyboard_event_scan_code(event))
+        {
+        case KEY_TAB:
+            shell->wm->focus_next_window();
+            return true;
+        }
+    }
 
     return false;
 }

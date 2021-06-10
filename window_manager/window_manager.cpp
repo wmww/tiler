@@ -50,14 +50,60 @@ public:
         on_destroy();
     }
 
+    /// miral::WindowManagementPolicy implementation
+    /// @{
+    void advise_new_window(WindowInfo const& window_info) override
+    {
+        windows.push_back(window_info.window());
+    }
+
+    void advise_delete_window(WindowInfo const& window_info) override
+    {
+        windows.erase(std::remove(windows.begin(), windows.end(), window_info.window()), windows.end());
+    }
+    /// @}
+
+    /// tiler::WindowManager implementation
+    /// @{
     void close_active_window() override
     {
         tools.ask_client_to_close(tools.active_window());
     }
 
+    void focus_next_window() override
+    {
+        auto const current = tools.active_window();
+        for (unsigned i = 0; i < windows.size() - 1; i++)
+        {
+            if (windows[i] == current)
+            {
+                tools.select_active_window(windows[i + 1]);
+                return;
+            }
+        }
+        tools.select_active_window(windows[0]);
+    }
+
+    void focus_prev_window() override
+    {
+        auto const current = tools.active_window();
+        for (unsigned i = 1; i < windows.size(); i++)
+        {
+            if (windows[i] == current)
+            {
+                tools.select_active_window(windows[i - 1]);
+                return;
+            }
+        }
+        tools.select_active_window(windows[windows.size() - 1]);
+    }
+    /// @}
+
     TilerShell* const shell;
     std::function<void()> const on_destroy;
     using MinimalWindowManager::tools;
+
+    std::vector<miral::Window> windows;
 };
 }
 

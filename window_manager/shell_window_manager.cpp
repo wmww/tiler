@@ -52,6 +52,22 @@ public:
             });
     }
 
+    void focus_next_window() override
+    {
+        with_locked_wm([this](WindowManager* wm)
+            {
+                wm->focus_next_window();
+            });
+    }
+
+    void focus_prev_window() override
+    {
+        with_locked_wm([this](WindowManager* wm)
+            {
+                wm->focus_prev_window();
+            });
+    }
+
     auto runner_option(TilerShell* shell) -> std::function<void(mir::Server&)> override
     {
         return wm_impl_runner_option(shell, [this](WindowManager* wm, WindowManagerTools* tools)
